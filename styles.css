@@ -1,0 +1,90 @@
+/* Your existing styles */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2em; /* Increase font size */
+    text-shadow: 0 0 10px rgba(245, 4, 4, 0.8); /* Add initial glow effect */
+    animation: glow 1.5s ease-in-out infinite; /* Add glow animation */
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Initial glow effect */
+    }
+    50% {
+        text-shadow: 0 0 15px rgba(205, 218, 12, 0.8); /* Mid glow effect */
+    }
+    100% {
+        text-shadow: 0 0 10px rgba(221, 52, 52, 0.8); /* Final glow effect */
+    }
+}
+
+select {
+    margin-bottom: 20px;
+    background-color: #2b2b2b; /* Dark background */
+    color: #fff;
+    border: 1px solid #444;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+/* Add glow effect on hover */
+td:hover {
+    background-color: #f54e07; /* Dark Red background on hover */
+    color: #fff;
+    animation: glowRed 0.5s ease-in-out;
+}
+
+@keyframes glowRed {
+    0% {
+        background-color: #8b0000; /* Dark Red background on hover */
+        color: #fff;
+    }
+    50% {
+        background-color: #ff0000; /* Bright Red background on hover */
+        color: #fff;
+    }
+    100% {
+        background-color: #8b0000; /* Dark Red background on hover */
+        color: #fff;
+    }
+}
+
+table {
+    width: 60%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #2b2b2b; /* Dark background */
+    box-shadow: 0 8px 16px rgba(0, 255, 0, 0.2); /* Neon green shadow */
+    border-radius: 10px;
+}
+
+th, td {
+    padding: 15px;
+    border: 1px solid #444;
+    border-radius: 8px;
+}
+
+th {
+    background-color: #8b0000; /* Deep Red */
+    color: #fff;
+}
+
+.highlighted {
+    background-color: #8b0000 !important; /* Deep Red */
+    color: #e9fa04 !important;
+}
+
+tr.highlighted-row td {
+    background-color: #8b0000 !important; /* Deep Red */
+    color: #e9fa04 !important;
+}
