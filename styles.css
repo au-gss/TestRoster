@@ -1,90 +1,69 @@
-/* Your existing styles */
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: center;
-    background-color: #121212;
-    color: #fff;
+/* Reset default margin and padding */
+body, h1, select {
     margin: 0;
     padding: 0;
 }
 
-h1 {
-    font-size: 2em; /* Increase font size */
-    text-shadow: 0 0 10px rgba(245, 4, 4, 0.8); /* Add initial glow effect */
-    animation: glow 1.5s ease-in-out infinite; /* Add glow animation */
+/* Set modern font families */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000; /* Set main background to black */
+    color: #f00; /* Neon red text color */
 }
 
-@keyframes glow {
-    0% {
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Initial glow effect */
-    }
-    50% {
-        text-shadow: 0 0 15px rgba(205, 218, 12, 0.8); /* Mid glow effect */
-    }
-    100% {
-        text-shadow: 0 0 10px rgba(221, 52, 52, 0.8); /* Final glow effect */
-    }
+/* Calendar styling */
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.calendar-day {
+    border: 1px solid #f00; /* Neon red border color */
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background-color: #000; /* Dark background color */
+    color: #fff; /* White text color */
+}
+
+.calendar-day-number {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.engineer-name {
+    font-size: 14px;
+    white-space: nowrap;
+    margin-top: auto; /* Pushes the engineer name to the bottom */
+    transition: filter 3s; /* Longer transition duration for filter property */
+}
+
+.engineer-name:hover {
+    filter: drop-shadow(0 0 20px #ff0); /* Larger and longer-lasting glow effect with yellow color */
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 select {
-    margin-bottom: 20px;
-    background-color: #2b2b2b; /* Dark background */
-    color: #fff;
-    border: 1px solid #444;
-    padding: 10px;
     font-size: 16px;
-    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #f00; /* Neon red border color */
+    border-radius: 4px;
+    background-color: #000; /* Dark background color */
+    color: #f00; /* Neon red text color */
+    cursor: pointer;
 }
 
-/* Add glow effect on hover */
-td:hover {
-    background-color: #f54e07; /* Dark Red background on hover */
-    color: #fff;
-    animation: glowRed 0.5s ease-in-out;
+option {
+    font-size: 16px;
+    background-color: #000; /* Dark background color */
+    color: #f00; /* Neon red text color */
 }
 
-@keyframes glowRed {
-    0% {
-        background-color: #8b0000; /* Dark Red background on hover */
-        color: #fff;
-    }
-    50% {
-        background-color: #ff0000; /* Bright Red background on hover */
-        color: #fff;
-    }
-    100% {
-        background-color: #8b0000; /* Dark Red background on hover */
-        color: #fff;
-    }
-}
 
-table {
-    width: 60%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background-color: #2b2b2b; /* Dark background */
-    box-shadow: 0 8px 16px rgba(0, 255, 0, 0.2); /* Neon green shadow */
-    border-radius: 10px;
-}
-
-th, td {
-    padding: 15px;
-    border: 1px solid #444;
-    border-radius: 8px;
-}
-
-th {
-    background-color: #8b0000; /* Deep Red */
-    color: #fff;
-}
-
-.highlighted {
-    background-color: #8b0000 !important; /* Deep Red */
-    color: #e9fa04 !important;
-}
-
-tr.highlighted-row td {
-    background-color: #8b0000 !important; /* Deep Red */
-    color: #e9fa04 !important;
-}
