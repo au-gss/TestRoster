@@ -1,99 +1,77 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Dynamically populate the month dropdown
-    const monthSelector = document.getElementById('monthSelector');
-    for (let i = 0; i < 12; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.text = new Date(2022, i, 1).toLocaleString('en-US', { month: 'long' });
-        monthSelector.add(option);
-    }
+// Declare roster variable
+let roster;
 
-    // Add event listener for month selection
-    monthSelector.addEventListener('change', updateCalendar);
-});
-
-async function generateCalendar(referenceMonth = 0) {
-    const today = new Date();
-    const selectedMonth = referenceMonth;
-    const firstDay = new Date(today.getFullYear(), selectedMonth, 1);
-    const lastDay = new Date(today.getFullYear(), selectedMonth + 1, 0);
-
-    const calendar = document.getElementById('calendar');
-    const calendarBody = document.getElementById('calendar-body');
-
-    // Clear existing calendar
-    calendar.querySelector('th').textContent = '';
-    calendarBody.innerHTML = '';
-
-    let html = '';
-    let day = 1;
-
-    for (let i = 0; i < 6; i++) {
-        html += '<tr>';
-        for (let j = 0; j < 7; j++) {
-            if (i === 0 && j < firstDay.getDay()) {
-                html += `<td></td>`;
-            } else if (day > lastDay.getDate()) {
-                html += `<td></td>`;
-            } else {
-                const currentDate = new Date(today.getFullYear(), selectedMonth, day);
-                const weekNumber = getISOWeekNumber(currentDate);
-                const engineerName = await getEngineerForWeek(weekNumber);
-                html += `<td>${day}<br>${engineerName}</td>`;
-                day++;
-            }
+// Function to parse CSV data and filter by month
+function parseCSV(csv) {
+    const lines = csv.split('\n').slice(1); // Exclude header line
+    const roster = {};
+    lines.forEach(line => {
+        const [day, engineer] = line.split(',');
+        const month = day.substring(5, 7); // Extract month from date
+        if (!roster[month]) {
+            roster[month] = [];
         }
-        html += '</tr>';
-    }
-
-    calendar.querySelector('th').textContent = firstDay.toLocaleString('en-US', { month: 'long', year: 'numeric' });
-    calendarBody.innerHTML = html;
-}
-
-document.addEventListener('mouseover', (event) => {
-    const hoveredElement = event.target;
-
-    if (hoveredElement.tagName === 'TD' && hoveredElement.textContent.trim() !== '') {
-        const engineerName = hoveredElement.textContent.trim();
-        highlightEngineerInstances(engineerName);
-    }
-});
-
-function highlightEngineerInstances(engineerName) {
-    const allEngineerCells = document.querySelectorAll('td');
-
-    allEngineerCells.forEach((cell) => {
-        const cellEngineerName = cell.textContent.trim();
-        if (cellEngineerName === engineerName) {
-            // Add highlighted class to individual cell
-            cell.classList.add('highlighted');
-        } else {
-            // Remove highlighted class from individual cell
-            cell.classList.remove('highlighted');
-        }
+        roster[month].push({ day, engineer });
     });
+    return roster;
 }
 
-function updateCalendar() {
-    const monthSelector = document.getElementById('monthSelector');
-    const referenceMonth = parseInt(monthSelector.value);
-    generateCalendar(referenceMonth);
+// Function to update calendar based on selected month
+function updateCalendar(month) {
+    const selectedMonth = month.toString().padStart(2, '0');
+    const selectedData = roster[selectedMonth];
+    const daysInMonth = new Date(2024, month, 0).getDate();
+    const firstDayOfMonth = new Date(2024, month - 1, 1).getDay(); // 0-indexed
+    const calendarDiv = document.getElementById('calendar');
+    calendarDiv.innerHTML = ''; // Clear previous calendar data
+
+    // Render weekdays
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    weekdays.forEach(day => {
+        const calendarEntry = document.createElement('div');
+        calendarEntry.textContent = day;
+        calendarEntry.classList.add('calendar-day');
+        calendarDiv.appendChild(calendarEntry);
+    });
+
+    // Render days of the month
+    let dayCount = 1;
+    for (let i = 0; i < 42; i++) { // 6 rows, 7 days each
+        const calendarEntry = document.createElement('div');
+        if (i < firstDayOfMonth || dayCount > daysInMonth) {
+            // Empty cells before the first day and after the last day
+            calendarEntry.textContent = '';
+        } else {
+            calendarEntry.textContent = dayCount;
+            const dayData = selectedData.find(entry => entry.day.endsWith(`-${dayCount.toString().padStart(2, '0')}`));
+            if (dayData) {
+                const engineerName = document.createElement('div');
+                engineerName.classList.add('engineer-name');
+                engineerName.textContent = dayData.engineer;
+                calendarEntry.appendChild(engineerName);
+            }
+            dayCount++;
+        }
+        calendarEntry.classList.add('calendar-day');
+        calendarDiv.appendChild(calendarEntry);
+    }
 }
 
-function getISOWeekNumber(date) {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - (d.getDay() + 6) % 7); // Revert to the original adjustment
-    const yearStart = new Date(d.getFullYear(), 0, 1);
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-}
+// Load CSV file asynchronously
+fetch('roster.csv')
+    .then(response => response.text())
+    .then(csvData => {
+        roster = parseCSV(csvData);
 
-async function getEngineerForWeek(weekNumber) {
-    const csvData = await fetch('roster.csv')
-        .then(response => response.text());
+        // Initial calendar update
+        updateCalendar(1); // Default to January
 
-    const parsedData = Papa.parse(csvData, { header: true }).data;
-    const engineer = parsedData.find(entry => parseInt(entry.Week) === weekNumber);
-
-    return engineer ? engineer.Engineer : '';
-}
+        // Event listener for month selection change
+        document.getElementById('month-select').addEventListener('change', function() {
+            const selectedMonth = parseInt(this.value);
+            updateCalendar(selectedMonth);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching CSV file:', error);
+    });
